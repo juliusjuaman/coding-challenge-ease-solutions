@@ -1,7 +1,7 @@
 
 public class PathDetails {
 
-	int startHeight, endHeight, length, xNext, yNext;
+	private int startHeight, endHeight, length, xNext, yNext;
 	
 	public PathDetails(int startHeight, int endHeight, int length, int xNext, int yNext) {
 		this.startHeight = startHeight;
@@ -9,5 +9,9 @@ public class PathDetails {
 		this.length = length;
 		this.xNext = xNext;
 		this.yNext = yNext;
+	}
+	
+	public int getLength() {
+		return this.length;
 	}
 }
