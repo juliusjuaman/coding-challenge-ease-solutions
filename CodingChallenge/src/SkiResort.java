@@ -1,0 +1,7 @@
+
+public class SkiResort {
+
+	public SkiResort() {
+		int[][] mountainMap = {{4,8,7,3}, {2,5,9,3}, {6,3,2,5}, {4,4,1,6}};
+	}
+}
