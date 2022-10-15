@@ -5,7 +5,7 @@ public class SkiResort {
 	
 	private static enum Directions{North, South, East, West};
 	private static final int[][] mountainMap = {{4,8,7,3}, {2,5,9,3}, {6,3,2,5}, {4,4,1,6}};
-	private PathDetails[][] wholeMapDetails;
+	private PathDetails[][] wholeMapPathDetailCache;
 	
 	public static void main(String[] args) {
 		SkiResort resort = new SkiResort();
@@ -13,7 +13,7 @@ public class SkiResort {
     }
 	
 	public SkiResort() {
-		wholeMapDetails = translateMapSizeToPathDetails(mountainMap);
+		wholeMapPathDetailCache = translateMapSizeToPathDetails(mountainMap);
 	}
 	
 	private int[] getLongestPathEntireMap() {
@@ -29,13 +29,13 @@ public class SkiResort {
 			}
 		}
 		
-		PathDetails temp = wholeMapDetails[xLongest][yLongest];
+		PathDetails temp = wholeMapPathDetailCache[xLongest][yLongest];
         int[] path = new int[temp.getLength()];
         
         for(int i = 0; i < temp.getLength() - 1; i++) {
         
         	path[i] = mountainMap[temp.getX()][temp.getY()];
-            temp = wholeMapDetails[temp.getXNext()][temp.getYNext()];
+            temp = getPathDetailFromCache(temp.getXNext(), temp.getYNext());
         }
         
         return path;
@@ -67,6 +67,21 @@ public class SkiResort {
         {
 			pathDetails = getLongestPathByIndex(x + 1, y);
 			listOfPossibleNextPath.add(mergePaths(pathDetails, Directions.South));
+        }
+		
+		// Check East
+		if(y != 0 && mountainMap[x][y - 1] < mountainMap[x][y])
+        {
+			pathDetails = getLongestPathByIndex(x, y - 1);
+			listOfPossibleNextPath.add(mergePaths(pathDetails, Directions.East));
+            
+        }
+		
+		// Check West
+		if(y != mountainMap[x].length -1 && mountainMap[x][y + 1] < mountainMap[x][y])
+        {
+			pathDetails = getLongestPathByIndex(x, y + 1);
+			listOfPossibleNextPath.add(mergePaths(pathDetails, Directions.West));
             
         }
 		
@@ -92,6 +107,13 @@ public class SkiResort {
 		}
 		
 		return merged;
+	}
+	
+	private PathDetails getPathDetailFromCache(int x, int y) {
+		if(wholeMapPathDetailCache[x][y].equals(null)){
+			wholeMapPathDetailCache[x][y] = getLongestPathByIndex(x, y);
+        }
+        return wholeMapPathDetailCache[x][y];
 	}
 }
 
