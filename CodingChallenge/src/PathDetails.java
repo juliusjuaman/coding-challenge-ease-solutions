@@ -32,4 +32,13 @@ public class PathDetails {
 	public int getY() {
 		return this.x;
 	}
+	
+		
+	public int getXNext() {
+		return this.xNext;
+	}
+	
+	public int getYNext() {
+		return this.yNext;
+	}
 }

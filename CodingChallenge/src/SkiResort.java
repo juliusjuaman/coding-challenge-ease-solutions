@@ -9,7 +9,7 @@ public class SkiResort {
 	
 	public static void main(String[] args) {
 		SkiResort resort = new SkiResort();
-		System.out.println("test");
+		System.out.println(resort.getLongestPathEntireMap());
     }
 	
 	public SkiResort() {
@@ -19,7 +19,6 @@ public class SkiResort {
 	private int[] getLongestPathEntireMap() {
 		int xLongest = 0;
 		int yLongest = 0;
-		int[] longestPath;
 		
 		for(int x = 0; x < mountainMap.length; x++) {
 			for(int y = 0; y < mountainMap.length; y++) {
@@ -30,7 +29,16 @@ public class SkiResort {
 			}
 		}
 		
-		return new int[1];
+		PathDetails temp = wholeMapDetails[xLongest][yLongest];
+        int[] path = new int[temp.getLength()];
+        
+        for(int i = 0; i < temp.getLength() - 1; i++) {
+        
+        	path[i] = mountainMap[temp.getX()][temp.getY()];
+            temp = wholeMapDetails[temp.getXNext()][temp.getYNext()];
+        }
+        
+        return path;
 	}
 	
 	private PathDetails[][] translateMapSizeToPathDetails(int[][] map) {
@@ -54,6 +62,13 @@ public class SkiResort {
 			listOfPossibleNextPath.add(mergePaths(pathDetails, Directions.North));
         }
 		
+		// Check South
+		if(x != mountainMap.length - 1 && mountainMap[x + 1][y] < mountainMap[x][y])
+        {
+			pathDetails = getLongestPathByIndex(x + 1, y);
+			listOfPossibleNextPath.add(mergePaths(pathDetails, Directions.South));
+            
+        }
 		
 		return pathDetails;
 	}
@@ -63,6 +78,17 @@ public class SkiResort {
 		
 		if(dir.equals(Directions.North)) {
 			merged = new PathDetails(pd.getX(), pd.getY(), mountainMap[pd.getX()][pd.getY()], pd.getEndHeight(), pd.getLength() + 1, pd.getX() - 1, pd.getY());
+		}
+		else if(dir.equals(Directions.South)) {
+			merged = new PathDetails(pd.getX(), pd.getY(), mountainMap[pd.getX()][pd.getY()], pd.getEndHeight(), pd.getLength() + 1, pd.getX() + 1, pd.getY());
+			
+		}
+		else if(dir.equals(Directions.East)) {
+			merged = new PathDetails(pd.getX(), pd.getY(), mountainMap[pd.getX()][pd.getY()], pd.getEndHeight(), pd.getLength() + 1, pd.getX(), pd.getY() - 1);
+			
+		}
+		else if(dir.equals(Directions.West)) {
+			merged = new PathDetails(pd.getX(), pd.getY(), mountainMap[pd.getX()][pd.getY()], pd.getEndHeight(), pd.getLength() + 1, pd.getX(), pd.getY() + 1);
 		}
 		
 		return merged;
