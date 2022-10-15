@@ -2,7 +2,7 @@
 public class SkiResort {
 	
 	private static final int[][] mountainMap = {{4,8,7,3}, {2,5,9,3}, {6,3,2,5}, {4,4,1,6}};
-	private PathDetails[][] wholeMapDetails; 
+	
 	
 	public static void main(String[] args) {
 		SkiResort resort = new SkiResort();
@@ -10,10 +10,7 @@ public class SkiResort {
     }
 	
 	public SkiResort() {
-		wholeMapDetails = new PathDetails[mountainMap.length][];
-		for(int x = 0; x < mountainMap.length; x++) {
-			wholeMapDetails[x] = new PathDetails[mountainMap[x].length];
-		}
+		PathDetails[][] wholeMapDetails = translateMapSizeToPathDetails(mountainMap);
 	}
 	
 	private int[] getLongestPathEntireMap() {
@@ -31,6 +28,15 @@ public class SkiResort {
 		}
 		
 		return new int[1];
+	}
+	
+	private PathDetails[][] translateMapSizeToPathDetails(int[][] map) {
+		PathDetails[][] pathDetails = new PathDetails[map.length][];
+		for(int x = 0; x < map.length; x++) {
+			pathDetails[x] = new PathDetails[map[x].length];
+		}
+		
+		return pathDetails;
 	}
 	
 	private PathDetails getLongestPathByIndex(int x, int y) {
