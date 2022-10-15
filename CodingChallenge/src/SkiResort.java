@@ -1,10 +1,13 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class SkiResort {
 	
 	private static enum Directions{North, South, East, West};
 	private static final int[][] mountainMap = {{4,8,7,3}, {2,5,9,3}, {6,3,2,5}, {4,4,1,6}};
+	
+	// Cache for path details for each location in map
 	private PathDetails[][] wholeMapPathDetailCache;
 	
 	public static void main(String[] args) {
@@ -21,8 +24,8 @@ public class SkiResort {
 		int yLongest = 0;
 		
 		for(int x = 0; x < mountainMap.length; x++) {
-			for(int y = 0; y < mountainMap.length; y++) {
-				if(getLongestPathByIndex(x, y).getLength() > getLongestPathByIndex(xLongest, yLongest).getLength()) {
+			for(int y = 0; y < mountainMap[x].length; y++) {
+				if(getPathDetailFromCache(x, y).compareTo(getPathDetailFromCache(xLongest, yLongest)) == 1 ) {
 					xLongest = x;
 					yLongest = y;
 				}
@@ -58,21 +61,21 @@ public class SkiResort {
 		// Check North
 		if(x != 0 && mountainMap[x - 1][y] < mountainMap[x][y])
         {
-			pathDetails = getLongestPathByIndex(x - 1, y);
+			pathDetails = getPathDetailFromCache(x - 1, y);
 			listOfPossibleNextPath.add(mergePaths(pathDetails, Directions.North));
         }
 		
 		// Check South
 		if(x != mountainMap.length - 1 && mountainMap[x + 1][y] < mountainMap[x][y])
         {
-			pathDetails = getLongestPathByIndex(x + 1, y);
+			pathDetails = getPathDetailFromCache(x + 1, y);
 			listOfPossibleNextPath.add(mergePaths(pathDetails, Directions.South));
         }
 		
 		// Check East
 		if(y != 0 && mountainMap[x][y - 1] < mountainMap[x][y])
         {
-			pathDetails = getLongestPathByIndex(x, y - 1);
+			pathDetails = getPathDetailFromCache(x, y - 1);
 			listOfPossibleNextPath.add(mergePaths(pathDetails, Directions.East));
             
         }
@@ -80,12 +83,18 @@ public class SkiResort {
 		// Check West
 		if(y != mountainMap[x].length -1 && mountainMap[x][y + 1] < mountainMap[x][y])
         {
-			pathDetails = getLongestPathByIndex(x, y + 1);
+			pathDetails = getPathDetailFromCache(x, y + 1);
 			listOfPossibleNextPath.add(mergePaths(pathDetails, Directions.West));
             
         }
 		
-		return pathDetails;
+		if(listOfPossibleNextPath.size() == 0)
+        {
+            return pathDetails;
+        }
+		
+		PathDetails tempTest = Collections.max(listOfPossibleNextPath);
+		return tempTest;
 	}
 	
 	private PathDetails mergePaths(PathDetails pd, Directions dir) {
@@ -110,7 +119,7 @@ public class SkiResort {
 	}
 	
 	private PathDetails getPathDetailFromCache(int x, int y) {
-		if(wholeMapPathDetailCache[x][y].equals(null)){
+		if(wholeMapPathDetailCache[x][y] == null){
 			wholeMapPathDetailCache[x][y] = getLongestPathByIndex(x, y);
         }
         return wholeMapPathDetailCache[x][y];

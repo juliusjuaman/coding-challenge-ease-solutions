@@ -1,5 +1,5 @@
 
-public class PathDetails {
+public class PathDetails implements Comparable<PathDetails>{
 
 	private int x, y, startHeight, endHeight, length, xNext, yNext;
 	
@@ -12,6 +12,19 @@ public class PathDetails {
 		this.xNext = xNext;
 		this.yNext = yNext;
 	}
+	
+	@Override
+    public int compareTo(PathDetails o) {
+        if(this.length < o.length || 
+        		(this.length == o.length && this.startHeight - this.endHeight < o.startHeight - o.endHeight)){
+            return -1;
+        }
+        else if(this.length > o.length 
+        		|| (this.length == o.length && this.startHeight - this.endHeight > o.startHeight - o.endHeight)){
+            return 1;
+        }
+        return 0;
+    }
 	
 	public int getLength() {
 		return this.length;
