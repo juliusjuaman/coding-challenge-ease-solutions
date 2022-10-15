@@ -1,8 +1,11 @@
+import java.util.ArrayList;
+import java.util.List;
 
 public class SkiResort {
 	
+	private static enum Directions{North, South, East, West};
 	private static final int[][] mountainMap = {{4,8,7,3}, {2,5,9,3}, {6,3,2,5}, {4,4,1,6}};
-	
+	private PathDetails[][] wholeMapDetails;
 	
 	public static void main(String[] args) {
 		SkiResort resort = new SkiResort();
@@ -10,7 +13,7 @@ public class SkiResort {
     }
 	
 	public SkiResort() {
-		PathDetails[][] wholeMapDetails = translateMapSizeToPathDetails(mountainMap);
+		wholeMapDetails = translateMapSizeToPathDetails(mountainMap);
 	}
 	
 	private int[] getLongestPathEntireMap() {
@@ -41,7 +44,28 @@ public class SkiResort {
 	
 	private PathDetails getLongestPathByIndex(int x, int y) {
 		
-		return new PathDetails(1,1,1,1,1);
+		List<PathDetails> listOfPossibleNextPath = new ArrayList<PathDetails>();
+		PathDetails pathDetails = new PathDetails(x, y, mountainMap[x][y], mountainMap[x][y], 1, -1, -1);
+		
+		// Check North
+		if(x != 0 && mountainMap[x - 1][y] < mountainMap[x][y])
+        {
+			pathDetails = getLongestPathByIndex(x - 1, y);
+			listOfPossibleNextPath.add(mergePaths(pathDetails, Directions.North));
+        }
+		
+		
+		return pathDetails;
+	}
+	
+	private PathDetails mergePaths(PathDetails pd, Directions dir) {
+		PathDetails merged = null;
+		
+		if(dir.equals(Directions.North)) {
+			merged = new PathDetails(pd.getX(), pd.getY(), mountainMap[pd.getX()][pd.getY()], pd.getEndHeight(), pd.getLength() + 1, pd.getX() - 1, pd.getY());
+		}
+		
+		return merged;
 	}
 }
 
