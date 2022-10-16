@@ -34,7 +34,6 @@ public class SkiResort {
 			System.out.print("Map.txt file cannot be read. " +
 					"Please ensure that map.txt file is present in src/map.txt and that the map format is valid");
 		}
-		
     }
 	
 	public SkiResort(MapData map) {
