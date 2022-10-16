@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -6,22 +7,44 @@ public class SkiResort {
 	
 	/* Choices for possible path directions */
 	private static enum Directions{North, South, East, West};
-	private static final int[][] mountainMap = {{4,8,7,3}, {2,5,9,3}, {6,3,2,5}, {4,4,1,6}};
+	
+	/* File path of map.txt file, same location as the java source codes (src/map.txt) */
+	private static final String mapFilePath = "src/map.txt";
+	
+	/* Map values in integer */
+	private static int[][] mountainMap;
 	
 	/* Cache for details of longest path from each location in map */
 	private PathDetails[][] wholeMapPathDetailCache;
 	
-	public static void main(String[] args) {
-		SkiResort resort = new SkiResort();
-		System.out.println( Arrays.toString(resort.getLongestPathEntireMap()));
+	public static void main(String[] args) throws IOException {
+		
+		MapData map = new MapData(mapFilePath);
+		if(map.readMapFile()) 
+		{
+			SkiResort resort = new SkiResort(map);
+			int[] calculatedPath = resort.getLongestPathEntireMap()	;
+			int drop = calculatedPath[0] - calculatedPath[calculatedPath.length - 1];
+			
+			System.out.println("Length of calculated path: " + calculatedPath.length);
+			System.out.println("Drop of calculated path: " + drop);
+			System.out.println("Calculated path: " + Arrays.toString(calculatedPath));
+		}
+		else {
+			System.out.print("Map.txt file cannot be read. " +
+					"Please ensure that map.txt file is present in src/map.txt and that the map format is valid");
+		}
+		
     }
 	
-	public SkiResort() {
+	public SkiResort(MapData map) {
+		mountainMap = map.getMapValues();
 		wholeMapPathDetailCache = translateMapSizeToPathDetails(mountainMap);
 	}
 	
 	/* Get longest and steepest path in map */
 	private int[] getLongestPathEntireMap() {
+	
 		int xLongest = 0;
 		int yLongest = 0;
 		
@@ -40,6 +63,7 @@ public class SkiResort {
 		}
 		
 		PathDetails longestPath = getPathDetailFromCache(xLongest, yLongest);
+		
         int[] path = new int[longestPath.getLength()];
 
         for(int i = 0; i < wholeMapPathDetailCache[xLongest][yLongest].getLength(); i++) {
@@ -100,7 +124,7 @@ public class SkiResort {
         if(listOfPossibleNextPath.isEmpty())
         {
         	// When end of path is reached i.e. no where else to go
-        	longestPath = new PathDetails(x,y,1, mountainMap[x][y], mountainMap[x][y], -1, -1);   
+        	longestPath = new PathDetails(x, y, mountainMap[x][y], mountainMap[x][y], 1, -1, -1);   
         }
         else 
         {
