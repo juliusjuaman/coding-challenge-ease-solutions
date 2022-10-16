@@ -14,6 +14,8 @@ public class MapData {
 	
 	public boolean readMapFile() {
 		
+		System.out.println("Loading map.txt file...");
+		
 		File file = new File(filePath);		
 		try (Scanner scan = new Scanner(file))
 		{
@@ -36,6 +38,7 @@ public class MapData {
 			return false;
 		} 
 		
+		System.out.println("map.txt loaded");
 		return true;
 	}
 	

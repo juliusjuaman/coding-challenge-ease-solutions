@@ -31,7 +31,7 @@ public class SkiResort {
 			System.out.println("Calculated path: " + Arrays.toString(calculatedPath));
 		}
 		else {
-			System.out.print("Map.txt file cannot be read. " +
+			System.out.print("map.txt file cannot be loaded/read. " +
 					"Please ensure that map.txt file is present in src/map.txt and that the map format is valid");
 		}
     }
@@ -44,6 +44,8 @@ public class SkiResort {
 	/* Get longest and steepest path in map */
 	private int[] getLongestPathEntireMap() {
 	
+		System.out.println("Calculating path...");
+		
 		int xLongest = 0;
 		int yLongest = 0;
 		
